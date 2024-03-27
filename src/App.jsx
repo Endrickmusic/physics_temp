@@ -12,7 +12,7 @@ export default function App() {
   
     <Canvas 
     shadows 
-    camera={{ position: [3, 10, 3], fov: 40 }}>
+    camera={{ position: [5, 6, 5], fov: 40 }}>
       <Environment
         files='./environments/aerodynamics_workshop_2k.hdr' />
         <color 

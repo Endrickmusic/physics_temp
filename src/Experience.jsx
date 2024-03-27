@@ -1,7 +1,8 @@
+import { useEffect, useRef } from 'react'
 import { OrbitControls, RoundedBox, useEnvironment, useTexture } from "@react-three/drei"
-import { useLoader } from "@react-three/fiber"
-import * as THREE from "three"
-import { Physics, RigidBody } from "@react-three/rapier"
+import { MathUtils, Matrix4, Quaternion, Vector3 } from "three"
+import { Physics, RigidBody, InstancedRigidBodies } from "@react-three/rapier"
+
 
 export default function Experience(){
 
@@ -12,40 +13,71 @@ export default function Experience(){
     <>
       <OrbitControls />  
 
-      <Physics>
+      <Physics
+      gravity={[0, -0.5, 0]}
+      >
       <RigidBody type='fixed'>
       <mesh
       receiveShadow
+      position={[0, -4, 0]}
       >
         <boxGeometry
-        args={[5, 0.2, 5]}
+        args={[5, 0.1, 5]}
         />
         <meshStandardMaterial 
           metalness={1}
           roughness={0.24}
           normalMap={ normalMap_02 }
           normalScale={0.2}
-          color={0xfffff22}
+          color={0xeeeeff}
         />
       </mesh>
       </RigidBody>
 
-      <RigidBody>  
-        <RoundedBox
-          castShadow
-          radius={0.01}
-          rotation={[1.2 * Math.PI, 0, 0]}
-          position={[0, 5, 0]}
-          >
-          <meshStandardMaterial 
-            metalness={1}
-            roughness={0.12}
-            normalMap={ normalMap_01 }
-            normalScale={0.3}
-          />
-       </RoundedBox>
-       </RigidBody>
+       <Instances />
        </Physics>
 
     </>
   )}
+
+  
+function Instances({ count = 256, rand = MathUtils.randFloatSpread }) {
+  
+  const cubesRef = useRef() 
+  const [normalMap_01, normalMap_02]  = useTexture(['./textures/waternormals.jpeg', './textures/SurfaceImperfections003_1K_Normal.jpg'])
+
+
+  const instances = Array.from({ length: count }, (_, i) => ({
+    key: i,
+    position: [rand(2), 3 + i / 4, rand(2)],
+    rotation: [Math.random(), Math.random(), Math.random()]
+
+  }))
+  return (
+
+    <InstancedRigidBodies 
+    type="dynamic"
+    instances={instances} 
+    colliders="cuboid"
+    >
+      <instancedMesh 
+      ref={cubesRef}
+      receiveShadow 
+      castShadow 
+      args={[undefined, undefined, count]} 
+      dispose={null}
+      >
+          <boxGeometry 
+          args={[0.3, 0.3, 0.3]}
+          />
+            <meshStandardMaterial 
+              metalness={1}
+              roughness={0.12}
+              normalMap={ normalMap_01 }
+              normalScale={0.3}
+            />
+        
+      </instancedMesh>
+    </InstancedRigidBodies>
+  )
+}

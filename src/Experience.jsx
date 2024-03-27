@@ -15,7 +15,7 @@ export default function Experience(){
       <Physics>
       <RigidBody type='fixed'>
       <mesh
-
+      receiveShadow
       >
         <boxGeometry
         args={[5, 0.2, 5]}
@@ -32,6 +32,7 @@ export default function Experience(){
 
       <RigidBody>  
         <RoundedBox
+          castShadow
           radius={0.01}
           rotation={[1.2 * Math.PI, 0, 0]}
           position={[0, 5, 0]}

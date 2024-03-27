@@ -10,12 +10,18 @@ export default function App() {
  return (
 
   
-    <Canvas shadows camera={{ position: [3, 10, 3], fov: 40 }}>
+    <Canvas 
+    shadows 
+    camera={{ position: [3, 10, 3], fov: 40 }}>
       <Environment
         files='./environments/aerodynamics_workshop_2k.hdr' />
         <color 
           attach="background" 
           args={["#aaefef"]} />
+      <directionalLight
+      castShadow
+      position={[0, 4, 2]}
+      intensity={10} />
       <Experience />
     </Canvas>
   

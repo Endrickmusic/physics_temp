@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { OrbitControls, RoundedBox, useEnvironment, useTexture } from "@react-three/drei"
+import { useThree } from "@react-three/fiber"
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three"
 import { Physics, RigidBody, InstancedRigidBodies, CuboidCollider } from "@react-three/rapier"
 import { EffectComposer, DepthOfField, N8AO, ToneMapping } from '@react-three/postprocessing'
@@ -9,21 +10,29 @@ export default function Experience(){
 
   const [normalMap_01, normalMap_02]  = useTexture(['./textures/waternormals.jpeg', './textures/SurfaceImperfections003_1K_Normal.jpg'])
   const envMap = useEnvironment({files:'./environments/aerodynamics_workshop_2k.hdr'}) 
+  const [enabled, setIsEnabled] = useState(false)
+  const viewport = useThree(state => state.viewport)
+  const toggleSwitch = () => 
+  {
+  setIsEnabled(previousState => !previousState) 
+  console.log('enabled:')
+  }
 
   return (
     <>
       <OrbitControls 
       // autoRotate 
       // autoRotateSpeed={0.01} 
-      enablePan={false} 
+      // enablePan={false} 
       // enableZoom={false} 
       // minPolarAngle={Math.PI / 8} 
       // maxPolarAngle={Math.PI / 8}
       />  
-    
+
       <Physics
       // debug
       gravity={[0, -0.3, 0]}
+      paused = {enabled? false : true}
       >
       {/* invisible colliders */}
       <RigidBody type='fixed'>
@@ -51,6 +60,7 @@ export default function Experience(){
       <mesh
       receiveShadow
       position={[0, -2, 0]}
+      onClick={toggleSwitch}
       >
         <boxGeometry
         args={[5, 0.1, 5]}

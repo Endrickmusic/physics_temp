@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { OrbitControls, RoundedBox, useEnvironment, useTexture } from "@react-three/drei"
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three"
-import { Physics, RigidBody, InstancedRigidBodies } from "@react-three/rapier"
+import { Physics, RigidBody, InstancedRigidBodies, CuboidCollider } from "@react-three/rapier"
 
 
 export default function Experience(){
@@ -11,15 +11,45 @@ export default function Experience(){
 
   return (
     <>
-      <OrbitControls />  
-
+      <OrbitControls 
+      // autoRotate 
+      // autoRotateSpeed={0.01} 
+      // enablePan={false} 
+      // enableZoom={false} 
+      // minPolarAngle={Math.PI / 8} 
+      // maxPolarAngle={Math.PI / 8}
+      />  
+    
       <Physics
-      gravity={[0, -0.5, 0]}
+      debug
+      gravity={[0, -0.3, 0]}
       >
+      {/* invisible colliders */}
+      <RigidBody type='fixed'>
+        <CuboidCollider
+          args={[ 2.5, 2, 0.2 ]}
+          position= {[ 0, 0, 2.7 ]} />
+      </RigidBody>
+      <RigidBody type='fixed'>
+        <CuboidCollider
+          args={[ 2.5, 2, 0.2 ]}
+          position= {[ 0, 0, - 2.7 ]} />
+      </RigidBody>
+      <RigidBody type='fixed'>
+        <CuboidCollider
+          args={[ 0.2, 2, 2.5 ]}
+          position= {[ 2.7, 0, 0 ]} />
+      </RigidBody>
+      <RigidBody type='fixed'>
+        <CuboidCollider
+          args={[ 0.2, 2, 2.5 ]}
+          position= {[ -2.7, 0, 0 ]} />
+      </RigidBody>
+
       <RigidBody type='fixed'>
       <mesh
       receiveShadow
-      position={[0, -4, 0]}
+      position={[0, -2, 0]}
       >
         <boxGeometry
         args={[5, 0.1, 5]}
@@ -41,7 +71,7 @@ export default function Experience(){
   )}
 
   
-function Instances({ count = 256, rand = MathUtils.randFloatSpread }) {
+function Instances({ count = 512, rand = MathUtils.randFloatSpread }) {
   
   const cubesRef = useRef() 
   const [normalMap_01, normalMap_02]  = useTexture(['./textures/waternormals.jpeg', './textures/SurfaceImperfections003_1K_Normal.jpg'])
@@ -59,6 +89,7 @@ function Instances({ count = 256, rand = MathUtils.randFloatSpread }) {
     type="dynamic"
     instances={instances} 
     colliders="cuboid"
+    friction={10}
     >
       <instancedMesh 
       ref={cubesRef}

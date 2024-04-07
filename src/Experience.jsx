@@ -37,11 +37,12 @@ export default function Experience(){
     <>
       <OrbitControls 
       // autoRotate 
-      // autoRotateSpeed={0.01} 
-      // enablePan={false} 
-      // enableZoom={false} 
-      // minPolarAngle={Math.PI / 8} 
-      // maxPolarAngle={Math.PI / 8}
+      // autoRotateSpeed={0.01}
+      target={[0, -1.2, 0]} 
+      enablePan={false} 
+      enableZoom={false} 
+      minPolarAngle={Math.PI / 2.5} 
+      maxPolarAngle={Math.PI / 2.5}
       />  
 
       <Physics
@@ -99,7 +100,7 @@ export default function Experience(){
 
       <EffectComposer>
         <N8AO aoRadius={0.5} intensity={1} />
-        <DepthOfField target={[1, 0, -2.5]} focusRange={0.004} bokehScale={10} />
+        {/* <DepthOfField target={[1, 0, -2.5]} focusRange={0.004} bokehScale={10} /> */}
         {/* <ToneMapping /> */}
       </EffectComposer>
     </>

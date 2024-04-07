@@ -12,7 +12,7 @@ export default function App() {
     <Canvas 
     shadows 
     orthographic
-    camera={{ position: [5, 1, -5], fov: 40, zoom: 50 }}>
+    camera={{ position: [5, -2, 5], fov: 40, zoom: 90}}>
       <Environment
         files='./environments/aerodynamics_workshop_2k.hdr' />
         <color 
@@ -25,6 +25,35 @@ export default function App() {
       <Experience />
       <Text>
         Landing Page
+      </Text>
+      <Text
+      position={[0, -2.2, 2.5]}
+      rotation={[0, 0, 0]}
+      scale={0.17}
+      >
+        Donec pede justo, fringilla vel, aliquet nec, vulputate eget.
+      </Text>
+      <Text
+      position={[2.5, -2.2, -0.2]}
+      rotation={[0, Math.PI/2, 0]}
+      scale={0.17}
+      >
+      Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id.
+      </Text>
+      
+      <Text
+      position={[0, -2.2, -2.5]}
+      rotation={[0, 2*Math.PI, 0]}
+      scale={0.17}
+      >
+        Donec pede justo, fringilla vel, aliquet nec, vulputate eget.
+      </Text>
+      <Text
+      position={[-2.5, -2.2, -0.2]}
+      rotation={[0, -Math.PI/2, 0]}
+      scale={0.17}
+      >
+      Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id.
       </Text>
     </Canvas>
   

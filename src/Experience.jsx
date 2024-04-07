@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { OrbitControls, RoundedBox, useEnvironment, useTexture } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { MathUtils, Matrix4, Quaternion, Vector3 } from "three"
@@ -8,15 +8,30 @@ import { EffectComposer, DepthOfField, N8AO, ToneMapping } from '@react-three/po
 
 export default function Experience(){
 
+  const count = 512
   const [normalMap_01, normalMap_02]  = useTexture(['./textures/waternormals.jpeg', './textures/SurfaceImperfections003_1K_Normal.jpg'])
   const envMap = useEnvironment({files:'./environments/aerodynamics_workshop_2k.hdr'}) 
-  const [enabled, setIsEnabled] = useState(false)
+  
+  
+  const [enabled, setIsEnabled] = useState(true)
   const viewport = useThree(state => state.viewport)
   const toggleSwitch = () => 
   {
   setIsEnabled(previousState => !previousState) 
   console.log('enabled:')
   }
+
+  const instances = useRef()
+
+  useEffect(()=>{
+    let rand = MathUtils.randFloatSpread
+    instances.current = Array.from({ length: count }, (_, i) => ({
+      key: i,
+      position: [rand(2), 3 + i / 4, rand(2)],
+      rotation: [Math.random(), Math.random(), Math.random()]
+    }))
+    console.log(instances.current)
+  },[])
 
   return (
     <>
@@ -32,7 +47,7 @@ export default function Experience(){
       <Physics
       // debug
       gravity={[0, -0.3, 0]}
-      paused = {enabled? false : true}
+      paused = {enabled? true : false}
       >
       {/* invisible colliders */}
       <RigidBody type='fixed'>
@@ -75,7 +90,11 @@ export default function Experience(){
       </mesh>
       </RigidBody>
 
-       <Instances />
+       <Instances 
+        count={count}
+        instances={instances.current}
+       />
+
        </Physics>
 
       <EffectComposer>
@@ -87,18 +106,11 @@ export default function Experience(){
   )}
 
   
-function Instances({ count = 512, rand = MathUtils.randFloatSpread }) {
+function Instances({ count, instances }) {
   
   const cubesRef = useRef() 
   const [normalMap_01, normalMap_02]  = useTexture(['./textures/waternormals.jpeg', './textures/SurfaceImperfections003_1K_Normal.jpg'])
-
-
-  const instances = Array.from({ length: count }, (_, i) => ({
-    key: i,
-    position: [rand(2), 3 + i / 4, rand(2)],
-    rotation: [Math.random(), Math.random(), Math.random()]
-
-  }))
+  
   return (
 
     <InstancedRigidBodies 
@@ -119,9 +131,10 @@ function Instances({ count = 512, rand = MathUtils.randFloatSpread }) {
           />
             <meshStandardMaterial 
               metalness={1}
-              roughness={0.12}
+              roughness={0.22}
               normalMap={ normalMap_01 }
               normalScale={0.3}
+              color={`rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`}
             />
         
       </instancedMesh>
